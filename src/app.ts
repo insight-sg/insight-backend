@@ -8,6 +8,7 @@ const port = config.get<number>('port');
 const app: Express = express();
 
 app.use(express.json());
+app.use(cors({ credentials: true }));
 
 app.listen(port, () => {
   logger.info(`App is running at http://localhost:${port}`);
