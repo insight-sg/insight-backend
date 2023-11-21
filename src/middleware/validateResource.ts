@@ -11,6 +11,8 @@ export const validate =
         query: req.query,
         params: req.params,
       });
+
+      next();
     } catch (e: any) {
       log.error(e);
 
