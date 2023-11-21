@@ -1,0 +1,15 @@
+.idea
+out
+gen
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/task.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+node_modules
+build
+.env
+.env.*
