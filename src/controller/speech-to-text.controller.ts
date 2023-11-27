@@ -1,20 +1,23 @@
 import { Request, Response } from 'express';
 import log from '../utils/logger';
 import * as fs from 'fs';
-import * as sdk from 'microsoft-cognitiveservices-speech-sdk';
 
 export const speechToTextController = (req: Request, res: Response) => {
   try {
     //
-    // const pushStream = sdk.AudioInputStream.createPushStream();
+    // const pushStream = AudioInputStream.createPushStream();
     const speechKey = process.env.SPEECH_SUBSCRIPTION_KEY || '';
     const serviceRegion = process.env.SERVICE_REGION || '';
-    // if (!req.file) {
-    //   log.info('[audioToText] No file from req.file');
-    //   res.status(400).send({
-    //     status: 'Error',
-    //     data: { message: 'Did not receive any audio files' },
-    //   });
+    console.log(speechKey);
+    console.log(serviceRegion);
+    if (!req.file) {
+      log.info('[audioToText] No file from req.file');
+      res.status(400).send({
+        status: 'Error',
+        data: { message: 'Did not receive any audio files' },
+      });
+    }
+    console.log(req.file);
     // } else {
     //   fs.createReadStream(req?.file.filename)
     //     .on('data', (arrayBuffer: any) => {
