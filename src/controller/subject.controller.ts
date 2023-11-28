@@ -40,6 +40,7 @@ export const createSubjectController = async (req: Request, res: Response) => {
       user_id,
     );
 
+    console.log('subjects : ', subjects);
     if (!subjects) {
       res
         .status(404)
@@ -117,7 +118,7 @@ export const createNoteBySubjectIdController = async (
         .status(404)
         .send({ message: 'Error', data: { msg: 'Unable to create note' } });
     } else {
-      res.status(200).send({ message: 'Success', data: { note_id: note.id } });
+      res.status(200).json({ message: 'Success', data: { note_id: note.id } });
     }
   } catch (err: any) {
     log.error('Error in createNoteBySubjectIdController :', err);
