@@ -10,12 +10,14 @@ import {
   updateSubject,
 } from '../models/subject.model';
 import {
+  createNoteBySubjectId,
   deleteNoteById,
   deleteNoteBySubjectId,
   getNoteBySubjectId,
 } from '../models/note.model';
 import log from '../utils/logger';
 import { BlobServiceClient } from '@azure/storage-blob';
+import { getBlobName } from '../utils/utilsfs';
 
 export const getAllSubjectService = async () => {
   const pool = await sqlConnect();
@@ -48,7 +50,7 @@ export const createSubjectService = async (
 
     console.log('[result2] : ', result2);
     if (result2) {
-      return result2;
+      return result_subject_id;
     } else {
       console.log('null');
       return null;
@@ -81,7 +83,9 @@ export const uploadPDFToStorageService = async (file: any) => {
     config.get('storage_container_name'),
   );
 
-  const client = containerClient.getBlockBlobClient(file.filename);
+  console.log('[uploadPDFToStorageService] : file : ', file);
+  const blobName = getBlobName(file.originalname);
+  const client = containerClient.getBlockBlobClient(blobName);
 
   const response = await client.uploadData(file, {
     blobHTTPHeaders: {
@@ -96,8 +100,8 @@ export const uploadPDFToStorageService = async (file: any) => {
     // );
     return null;
   } else {
-    console.log(response);
-    return response;
+    console.log('Successful upload, bloblName : ', blobName);
+    return blobName;
   }
 };
 
@@ -127,6 +131,28 @@ export const updateSubjectIdService = async (
   if (result) {
     console.log(result?.recordset);
     return result.recordset;
+  } else {
+    console.log('null');
+    return null;
+  }
+};
+
+export const createNotesBySubjectIdService = async (
+  subject_id: number,
+  note_title: string,
+  note_url: string,
+) => {
+  const bloblUrl = config.get('storage_blob_url');
+  const newNoteUrl = `${bloblUrl}${note_url}`;
+  const result = await createNoteBySubjectId({
+    note_title,
+    subject_id,
+    note_url: newNoteUrl,
+  });
+
+  if (result) {
+    console.log(result);
+    return result;
   } else {
     console.log('null');
     return null;

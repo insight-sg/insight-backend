@@ -18,15 +18,15 @@ export const createNoteBySubjectId = async ({
     ?.request()
     .input('note_title', VarChar, note_title)
     .input('subject_id', Int, subject_id)
-    .input('note_url', Int, note_url)
+    .input('note_url', VarChar, note_url)
     .query(
-      'INSERT INTO note(note_title,subject_id,note_url) VALUES(@note_title,@subject_id,@note_url)',
+      'INSERT INTO notes(note_title,subject_id,note_url) VALUES(@note_title,@subject_id,@note_url); SELECT SCOPE_IDENTITY() AS id',
     );
 
   console.log(result);
 
   if (result && result?.recordset[0]) {
-    return result?.recordset[0].note_id;
+    return result.recordset[0];
   }
   return null;
 };

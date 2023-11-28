@@ -12,4 +12,5 @@ export default {
   },
   storage_connection_string: process.env.AZURE_STORAGE_CONNECTION_STRING ?? '',
   storage_container_name: process.env.AZURE_STORAGE_CONTAINER_NAME ?? '',
+  storage_blob_url: process.env.AZURE_STORAGE_BLOB_URL ?? '',
 };
