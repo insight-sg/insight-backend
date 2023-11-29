@@ -13,4 +13,7 @@ export default {
   storage_connection_string: process.env.AZURE_STORAGE_CONNECTION_STRING ?? '',
   storage_container_name: process.env.AZURE_STORAGE_CONTAINER_NAME ?? '',
   storage_blob_url: process.env.AZURE_STORAGE_BLOB_URL ?? '',
+  document_intelligence_key: process.env.AZURE_DOCUMENT_INTELLIGENCE_KEY ?? '',
+  document_intelligence_endpoint:
+    process.env.AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT ?? '',
 };
