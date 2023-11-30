@@ -5,10 +5,11 @@ import {
   createChoiceByQuestionIdService,
   createQuestionByQuizIdService,
   createQuizBySubjectIdService,
-  getChoiceByQuestionService,
+  getChoiceByQuestionIdService as getChoiceByQuestionIdService,
   getQuestionByQuizIdService,
   getQuizBySubjectIdService,
 } from '../service/quiz.service';
+import { getSubjectByUserIdService } from '../service/subject.service';
 
 export const createQuizBySubjectIdController = async (
   req: Request,
@@ -98,6 +99,45 @@ export const createChoiceByQuestionIdController = async (
   }
 };
 
+export const getAllQuizzesbyUserIdController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { user_id } = req.params;
+    const subjects = await getSubjectByUserIdService(Number(user_id));
+
+    console.log('subjects : ', subjects);
+    if (!subjects) {
+      res.status(404).send({ message: 'Error', data: {} });
+    } else {
+      console.log('subjects length : ');
+      for (let i = 0; i < subjects.length; i++) {
+        subjects[i].quizzes = await getQuizBySubjectIdService(
+          subjects[i].subject_id,
+        );
+        for (let j = 0; j < subjects[i].quizzes.length; j++) {
+          subjects[i].quizzes[j].questions = await getQuestionByQuizIdService(
+            subjects[i].quizzes[j].quiz_id,
+          );
+          for (let k = 0; k < subjects[i].quizzes[j].questions.length; k++) {
+            console.log('i , j , k : ', i, j, k);
+            subjects[i].quizzes[j].questions[k].choice =
+              await getChoiceByQuestionIdService(
+                subjects[i].quizzes[j].questions[k].question_id,
+              );
+          }
+        }
+      }
+      res.status(200).send({ message: 'Success', data: { subjects } });
+    }
+  } catch (err: any) {
+    log.error('Error in getAllQuizzesbyUserIdController :');
+    console.error('err ', err);
+    res.status(500).send({ message: 'Internal Service Error', data: {} });
+  }
+};
+
 export const getAllQuizBySubjectIdController = async (
   req: Request,
   res: Response,
@@ -148,7 +188,7 @@ export const getChoiceByQuestionIdController = async (
 ) => {
   try {
     const { question_id } = req.params;
-    const result = getChoiceByQuestionService(Number(question_id));
+    const result = getChoiceByQuestionIdService(Number(question_id));
 
     console.log(result);
 

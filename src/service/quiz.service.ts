@@ -7,6 +7,7 @@ import {
   getQuestionByQuizId,
   getQuizBySubjectId,
 } from '../models/quiz.model';
+import log from '../utils/logger';
 
 export const createQuizBySubjectIdService = async (
   quiz_title: string,
@@ -88,11 +89,12 @@ export const getQuestionByQuizIdService = async (quiz_id: number) => {
   }
 };
 
-export const getChoiceByQuestionService = async (quiz_id: number) => {
-  const result = await getChoiceByQuestionId(quiz_id);
+export const getChoiceByQuestionIdService = async (question_id: number) => {
+  log.info('[getChoiceByQuestionIdService]');
+  const result = await getChoiceByQuestionId(question_id);
 
   if (result) {
-    console.log(result);
+    console.log('[getChoiceByQuestionIdService] result :', result);
     return result.recordset;
   } else {
     console.log('null');

@@ -16,4 +16,6 @@ export default {
   document_intelligence_key: process.env.AZURE_DOCUMENT_INTELLIGENCE_KEY ?? '',
   document_intelligence_endpoint:
     process.env.AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT ?? '',
+  openai_endpoint: process.env.AZURE_OPENAI_ENDPOINT ?? '',
+  openai_key: process.env.AZURE_OPENAI_KEY ?? '',
 };

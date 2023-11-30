@@ -7,6 +7,7 @@ import {
   getFlashcardBySubjectIdService,
   getFlashcardItemByFlashcardIdService,
 } from '../service/flashcard.service';
+import { getFrontBackFromOpenAIService } from '../service/openai.service';
 
 export const createFlashcardBySubjectIdController = async (
   req: Request,
@@ -108,6 +109,28 @@ export const getAllFlashcardItemByFlashcardIdController = async (
     }
   } catch (err: any) {
     log.error('Error in getAllFlashcardItemByFlashcardIdController :', err);
+    console.error('err ', err);
+    res.status(500).send({ message: 'Internal Service Error', data: {} });
+  }
+};
+
+export const getFrontBackFromOpenAIController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { text_chunk } = req.body;
+    const result = getFrontBackFromOpenAIService(text_chunk);
+
+    console.log(result);
+
+    if (!result) {
+      res.status(404).send({ message: 'Error', data: {} });
+    } else {
+      res.status(200).send({ message: 'Success', data: { result } });
+    }
+  } catch (err: any) {
+    log.error('Error in getFrontBackFromOpenAIController :', err);
     console.error('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }

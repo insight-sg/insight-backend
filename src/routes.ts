@@ -16,12 +16,14 @@ import {
   createFlashcardItemByFlashcardIdController,
   getAllFlashcardBySubjectIdController,
   getAllFlashcardItemByFlashcardIdController,
+  getFrontBackFromOpenAIController,
 } from './controller/flashcard.controller';
 import {
   createChoiceByQuestionIdController,
   createQuestionByQuizIdController,
   createQuizBySubjectIdController,
   getAllQuizBySubjectIdController,
+  getAllQuizzesbyUserIdController,
   getChoiceByQuestionIdController,
   getQuestionByQuizIdController,
 } from './controller/quiz.controller';
@@ -49,6 +51,7 @@ export const routes = (app: Express) => {
 
   app.post('/api/flashcard/', createFlashcardBySubjectIdController);
   app.post('/api/flashcarditem/', createFlashcardItemByFlashcardIdController);
+  app.post('/api/generateflashcard/', getFrontBackFromOpenAIController);
 
   app.get('/api/flashcard/:subject_id', getAllFlashcardBySubjectIdController);
   app.get(
@@ -60,6 +63,7 @@ export const routes = (app: Express) => {
   app.post('/api/question/', createQuestionByQuizIdController);
   app.post('/api/choice/', createChoiceByQuestionIdController);
 
+  app.get('/api/subjectquiz/:user_id', getAllQuizzesbyUserIdController);
   app.get('/api/quiz/', getAllQuizBySubjectIdController);
   app.get('/api/question/', getQuestionByQuizIdController);
   app.get('/api/choice/', getChoiceByQuestionIdController);
