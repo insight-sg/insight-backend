@@ -29,6 +29,10 @@ export const createFlashcardItemByFlashcardIdService = async (
   flashcard_front: string,
   flashcard_back: string,
 ) => {
+  console.log(
+    '[createFlashcardItemByFlashcardIdService] flashcard_id :',
+    flashcard_id,
+  );
   const result = await createFlashcardItemByFlashcardId({
     flashcard_id,
     flashcard_front,

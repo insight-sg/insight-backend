@@ -11,6 +11,7 @@ import {
   updateQuizScoreByQuizIdService,
 } from '../service/quiz.service';
 import { getSubjectByUserIdService } from '../service/subject.service';
+import { getQuestionsAndChoicesOpenAIService } from '../service/openai.service';
 
 export const createQuizBySubjectIdController = async (
   req: Request,
@@ -239,6 +240,30 @@ export const updateQuizScoreByQuizIdController = async (
     }
   } catch (err: any) {
     log.error('Error in updateQuizScoreByQuizIdController :', err);
+    console.error('err ', err);
+    res.status(500).send({ message: 'Internal Service Error', data: {} });
+  }
+};
+
+export const getQuestionAndAnswerFromOpenAIController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    log.info('[getQuestionAndAnswerFromOpenAIController]');
+    const { text_chunk } = req.body;
+    console.log('text_chunk : ', text_chunk);
+    const result = await getQuestionsAndChoicesOpenAIService(text_chunk);
+
+    console.log('getFrontBackFromOpenAIService result :', result);
+
+    if (!result) {
+      res.status(404).send({ message: 'Error', data: {} });
+    } else {
+      res.status(200).send({ message: 'Success', data: { result } });
+    }
+  } catch (err: any) {
+    log.error('Error in getQuestionAndAnswerFromOpenAIController :', err);
     console.error('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }

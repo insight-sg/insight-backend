@@ -55,6 +55,28 @@ export const createSubjectController = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllSubjectByUserIdController = async (
+  req: Request,
+  res: Response,
+) => {
+  log.info('[getAllSubjectByUserIdController]');
+  try {
+    const { user_id } = req.params;
+    const subjects = await getSubjectByUserIdService(Number(user_id));
+
+    console.log('subjects : ', subjects);
+    if (!subjects) {
+      res.status(404).send({ message: 'Error', data: {} });
+    } else {
+      res.status(200).send({ message: 'Success', data: { subjects } });
+    }
+  } catch (err: any) {
+    log.error('Error in getAllSubjectByUserIdController :');
+    console.error('err ', err);
+    res.status(500).send({ message: 'Internal Service Error', data: {} });
+  }
+};
+
 export const getAllNotesByUserIdController = async (
   req: Request,
   res: Response,

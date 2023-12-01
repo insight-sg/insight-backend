@@ -16,21 +16,34 @@ export const createFlashcardBySubjectIdController = async (
 ) => {
   log.info('[createFlashcardBySubjectIdController]');
   try {
-    const { flashcard_title, subject_id } = req.body;
+    const { subject_id, flashcard_title, flashcards } = req.body;
     const flashcard = await createFlashcardBySubjectIdService(
       flashcard_title,
       subject_id,
     );
-
+    console.log('flashcard result create flashcardbysubjectid : ', flashcard);
     if (!flashcard) {
       res.status(404).send({
         message: 'Error',
         data: { msg: 'Unable to create flashcard' },
       });
     } else {
+      const promises = [];
+      for (let i = 0; i < flashcards.length; i++) {
+        promises.push(
+          createFlashcardItemByFlashcardIdService(
+            flashcard,
+            flashcards[i].FRONT,
+            flashcards[i].BACK,
+          ),
+        );
+      }
+      await Promise.all(promises).then((result) => {
+        console.log('In promise.all.then resutl : ', result);
+      });
       res.status(200).json({
         message: 'Success',
-        data: { flashcard: flashcard.id },
+        data: { flashcard: flashcard },
       });
     }
   } catch (err: any) {
@@ -120,10 +133,12 @@ export const getFrontBackFromOpenAIController = async (
   res: Response,
 ) => {
   try {
+    log.info('[getFrontBackFromOpenAIController]');
     const { text_chunk } = req.body;
-    const result = getFrontBackFromOpenAIService(text_chunk);
+    console.log('text_chunk : ', text_chunk);
+    const result = await getFrontBackFromOpenAIService(text_chunk);
 
-    console.log(result);
+    console.log('getFrontBackFromOpenAIService result :', result);
 
     if (!result) {
       res.status(404).send({ message: 'Error', data: {} });

@@ -44,9 +44,9 @@ export const createFlashcardItemByFlashcardId = async ({
   const pool = await sqlConnect();
   const result = await pool
     ?.request()
+    .input('flashcard_id', Int, flashcard_id)
     .input('flashcard_front', VarChar, flashcard_front)
     .input('flashcard_back', VarChar, flashcard_back)
-    .input('flashcard_id', Int, flashcard_id)
     .query(
       'INSERT INTO flashcard_item(flashcard_id,flashcard_front,flashcard_back) VALUES(@flashcard_id,@flashcard_front,@flashcard_back); SELECT SCOPE_IDENTITY() AS id',
     );

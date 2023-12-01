@@ -4,6 +4,7 @@ import { processFile } from './middleware/processFile';
 import {
   createSubjectController,
   getAllNotesByUserIdController,
+  getAllSubjectByUserIdController,
   getAllSubjectController,
 } from './controller/subject.controller';
 import { speechToTextController } from './controller/speech-to-text.controller';
@@ -26,6 +27,7 @@ import {
   getAllQuizBySubjectIdController,
   getAllQuizzesbyUserIdController,
   getChoiceByQuestionIdController,
+  getQuestionAndAnswerFromOpenAIController,
   getQuestionByQuizIdController,
   updateQuizScoreByQuizIdController,
 } from './controller/quiz.controller';
@@ -47,6 +49,7 @@ export const routes = (app: Express) => {
   app.get('/api/subjects', getAllSubjectController);
   app.post('/api/subjects/', createSubjectController);
 
+  app.get('/api/subjects/:user_id', getAllSubjectByUserIdController);
   app.get('/api/subjects/note/:user_id', getAllNotesByUserIdController);
   app.get(
     '/api/subjects/flashcard/:user_id',
@@ -69,6 +72,7 @@ export const routes = (app: Express) => {
   app.post('/api/quiz/', createQuizBySubjectIdController);
   app.post('/api/question/', createQuestionByQuizIdController);
   app.post('/api/choice/', createChoiceByQuestionIdController);
+  app.post('/api/generatequiz/', getQuestionAndAnswerFromOpenAIController);
 
   app.post('/api/quizscore/', updateQuizScoreByQuizIdController);
 
