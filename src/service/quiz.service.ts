@@ -6,6 +6,7 @@ import {
   getChoiceByQuestionId,
   getQuestionByQuizId,
   getQuizBySubjectId,
+  updateQuizScoreByQuizId,
 } from '../models/quiz.model';
 import log from '../utils/logger';
 
@@ -92,6 +93,22 @@ export const getQuestionByQuizIdService = async (quiz_id: number) => {
 export const getChoiceByQuestionIdService = async (question_id: number) => {
   log.info('[getChoiceByQuestionIdService]');
   const result = await getChoiceByQuestionId(question_id);
+
+  if (result) {
+    console.log('[getChoiceByQuestionIdService] result :', result);
+    return result.recordset;
+  } else {
+    console.log('null');
+    return null;
+  }
+};
+
+export const updateQuizScoreByQuizIdService = async (
+  quiz_id: number,
+  quiz_score: number,
+) => {
+  log.info('[getChoiceByQuestionIdService]');
+  const result = await updateQuizScoreByQuizId(quiz_id, quiz_score);
 
   if (result) {
     console.log('[getChoiceByQuestionIdService] result :', result);

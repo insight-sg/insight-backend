@@ -133,6 +133,37 @@ export const getChoiceByQuestionId = async (question_id: number) => {
   }
 };
 
+export const updateQuizScoreByQuizId = async (
+  quiz_id: number,
+  quiz_score: number,
+) => {
+  const pool = await sqlConnect();
+  const result = await pool
+    ?.request()
+    .input('quiz_id', Int, quiz_id)
+    .query('SELECT * FROM quiz WHERE quiz_id=@quiz_id');
+
+  console.log(result);
+
+  if (result?.recordset.length == 0) {
+    return null;
+  } else {
+    const result = await pool
+      ?.request()
+      .input('quiz_score', Int, quiz_score)
+      .input('quiz_id', Int, quiz_id)
+      .query('UPDATE quiz SET quiz_score=@quiz_score WHERE quiz_id=@quiz_id');
+
+    console.log('updated : ', result);
+
+    if (result) {
+      return result;
+    } else {
+      return null;
+    }
+  }
+};
+
 export const deleteFlashcardById = async (flashcard_id: number) => {
   const pool = await sqlConnect();
   const result = await pool
@@ -159,37 +190,5 @@ export const deleteFlashcardBySubjectId = async (subject_id: number) => {
     return result;
   } else {
     return null;
-  }
-};
-export const updateFlashcard = async (
-  flashcard_id: number,
-  flashcard_title: string,
-) => {
-  const pool = await sqlConnect();
-  const result = await pool
-    ?.request()
-    .input('flashcard_id', Int, flashcard_id)
-    .query('SELECT * FROM flashcards WHERE flashcard_id=@flashcard_id');
-
-  console.log(result);
-
-  if (result?.recordset.length == 0) {
-    return null;
-  } else {
-    const result = await pool
-      ?.request()
-      .input('flashcard_title', VarChar, flashcard_title)
-      .input('flashcard_id', Int, flashcard_id)
-      .query(
-        'UPDATE flashcards SET flashcard_title=@flashcard_title WHERE flashcard_id=@flashcard_id',
-      );
-
-    console.log('updated : ', result);
-
-    if (result) {
-      return null;
-    } else {
-      return result;
-    }
   }
 };

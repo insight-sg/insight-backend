@@ -26,6 +26,7 @@ import {
   getAllQuizzesbyUserIdController,
   getChoiceByQuestionIdController,
   getQuestionByQuizIdController,
+  updateQuizScoreByQuizIdController,
 } from './controller/quiz.controller';
 import {
   createUserController,
@@ -62,6 +63,8 @@ export const routes = (app: Express) => {
   app.post('/api/quiz/', createQuizBySubjectIdController);
   app.post('/api/question/', createQuestionByQuizIdController);
   app.post('/api/choice/', createChoiceByQuestionIdController);
+
+  app.post('/api/quizscore/', updateQuizScoreByQuizIdController);
 
   app.get('/api/subjectquiz/:user_id', getAllQuizzesbyUserIdController);
   app.get('/api/quiz/', getAllQuizBySubjectIdController);

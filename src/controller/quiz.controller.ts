@@ -8,6 +8,7 @@ import {
   getChoiceByQuestionIdService as getChoiceByQuestionIdService,
   getQuestionByQuizIdService,
   getQuizBySubjectIdService,
+  updateQuizScoreByQuizIdService,
 } from '../service/quiz.service';
 import { getSubjectByUserIdService } from '../service/subject.service';
 
@@ -199,6 +200,31 @@ export const getChoiceByQuestionIdController = async (
     }
   } catch (err: any) {
     log.error('Error in getChoiceByQuestionIdController :', err);
+    console.error('err ', err);
+    res.status(500).send({ message: 'Internal Service Error', data: {} });
+  }
+};
+
+export const updateQuizScoreByQuizIdController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { quiz_id, quiz_score } = req.body;
+    const result = updateQuizScoreByQuizIdService(
+      Number(quiz_id),
+      Number(quiz_score),
+    );
+
+    console.log(result);
+
+    if (!result) {
+      res.status(404).send({ message: 'Error', data: {} });
+    } else {
+      res.status(200).send({ message: 'Success', data: { result } });
+    }
+  } catch (err: any) {
+    log.error('Error in updateQuizScoreByQuizIdController :', err);
     console.error('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
