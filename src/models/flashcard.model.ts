@@ -25,7 +25,7 @@ export const createFlashcardBySubjectId = async ({
     .input('flashcard_title', VarChar, flashcard_title)
     .input('subject_id', Int, subject_id)
     .query(
-      'INSERT INTO flashcards(flashcard_title,subject_id) VALUES(@flashcard_title,@subject_id); SELECT SCOPE_IDENTITY() AS id',
+      'INSERT INTO flashcard(flashcard_title,subject_id) VALUES(@flashcard_title,@subject_id); SELECT SCOPE_IDENTITY() AS id',
     );
   console.log(result);
 
@@ -64,7 +64,7 @@ export const getFlashcardBySubjectId = async (subject_id: number) => {
   const result = await pool
     ?.request()
     .input('subject_id', Int, subject_id)
-    .query('SELECT * FROM flashcards WHERE subject_id=@subject_id');
+    .query('SELECT * FROM flashcard WHERE subject_id=@subject_id');
 
   console.log(result);
   if (result) {
@@ -108,7 +108,7 @@ export const deleteFlashcardBySubjectId = async (subject_id: number) => {
   const result = await pool
     ?.request()
     .input('subject_id', Int, subject_id)
-    .query('DELETE FROM flashcards WHERE subject_id=@subject_id');
+    .query('DELETE FROM flashcard WHERE subject_id=@subject_id');
 
   console.log(result);
   if (result) {
@@ -125,7 +125,7 @@ export const updateFlashcard = async (
   const result = await pool
     ?.request()
     .input('flashcard_id', Int, flashcard_id)
-    .query('SELECT * FROM flashcards WHERE flashcard_id=@flashcard_id');
+    .query('SELECT * FROM flashcard WHERE flashcard_id=@flashcard_id');
 
   console.log(result);
 
@@ -137,7 +137,7 @@ export const updateFlashcard = async (
       .input('flashcard_title', VarChar, flashcard_title)
       .input('flashcard_id', Int, flashcard_id)
       .query(
-        'UPDATE flashcards SET flashcard_title=@flashcard_title WHERE flashcard_id=@flashcard_id',
+        'UPDATE flashcard SET flashcard_title=@flashcard_title WHERE flashcard_id=@flashcard_id',
       );
 
     console.log('updated : ', result);
