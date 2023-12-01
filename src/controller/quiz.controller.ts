@@ -144,15 +144,26 @@ export const getAllQuizBySubjectIdController = async (
   res: Response,
 ) => {
   try {
+    log.info('[getAllQuizBySubjectIdController]');
     const { subject_id } = req.params;
-    const result = getQuizBySubjectIdService(Number(subject_id));
+    const quizzes = await getQuizBySubjectIdService(Number(subject_id));
 
-    console.log(result);
+    console.log(quizzes);
 
-    if (!result) {
-      res.status(404).send({ message: 'Error', data: {} });
+    if (quizzes) {
+      for (let j = 0; j < quizzes.length; j++) {
+        quizzes[j].questions = await getQuestionByQuizIdService(
+          quizzes[j].quiz_id,
+        );
+        for (let k = 0; k < quizzes[j].questions.length; k++) {
+          quizzes[j].questions[k].choice = await getChoiceByQuestionIdService(
+            quizzes[j].questions[k].question_id,
+          );
+        }
+      }
+      res.status(200).send({ message: 'Success', data: { quizzes } });
     } else {
-      res.status(200).send({ message: 'Success', data: { result } });
+      res.status(404).send({ message: 'Error', data: {} });
     }
   } catch (err: any) {
     log.error('Error in getAllQuizBySubjectIdController :', err);
@@ -210,7 +221,10 @@ export const updateQuizScoreByQuizIdController = async (
   res: Response,
 ) => {
   try {
+    log.info('[updateQuizScoreByQuizIdController]');
     const { quiz_id, quiz_score } = req.body;
+    console.log('[quiz_id ] :', quiz_id);
+    console.log('[quiz_score ] :', quiz_score);
     const result = updateQuizScoreByQuizIdService(
       Number(quiz_id),
       Number(quiz_score),

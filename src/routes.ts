@@ -72,7 +72,7 @@ export const routes = (app: Express) => {
 
   app.post('/api/quizscore/', updateQuizScoreByQuizIdController);
 
-  app.get('/api/quiz/', getAllQuizBySubjectIdController);
+  app.get('/api/quiz/:subject_id', getAllQuizBySubjectIdController);
   app.get('/api/question/', getQuestionByQuizIdController);
   app.get('/api/choice/', getChoiceByQuestionIdController);
 };
