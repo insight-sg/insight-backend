@@ -8,6 +8,7 @@ import {
   getFlashcardItemByFlashcardIdService,
 } from '../service/flashcard.service';
 import { getFrontBackFromOpenAIService } from '../service/openai.service';
+import { getSubjectByUserIdService } from '../service/subject.service';
 
 export const createFlashcardBySubjectIdController = async (
   req: Request,
@@ -131,6 +132,39 @@ export const getFrontBackFromOpenAIController = async (
     }
   } catch (err: any) {
     log.error('Error in getFrontBackFromOpenAIController :', err);
+    console.error('err ', err);
+    res.status(500).send({ message: 'Internal Service Error', data: {} });
+  }
+};
+
+export const getAllFlashcardbyUserIdController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { user_id } = req.params;
+    const subjects = await getSubjectByUserIdService(Number(user_id));
+
+    console.log('subjects : ', subjects);
+    if (!subjects) {
+      res.status(404).send({ message: 'Error', data: {} });
+    } else {
+      console.log('subjects length : ');
+      for (let i = 0; i < subjects.length; i++) {
+        subjects[i].flashcards = await getFlashcardBySubjectIdService(
+          subjects[i].subject_id,
+        );
+        for (let j = 0; j < subjects[i].flashcards.length; j++) {
+          subjects[i].flashcards[j].flashcard_item =
+            await getFlashcardItemByFlashcardIdService(
+              subjects[i].flashcards[j].flashcard_id,
+            );
+        }
+      }
+      res.status(200).send({ message: 'Success', data: { subjects } });
+    }
+  } catch (err: any) {
+    log.error('Error in getAllFlashcardbyUserIdController :');
     console.error('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
