@@ -1,23 +1,13 @@
-import { Int, VarChar } from 'mssql';
 import { sqlConnect } from '../utils/connection';
 import config from 'config';
 import {
   createSubject,
   createUserSubject,
-  deleteSubjectById,
   deleteUserSubject,
   getSubjectByUserId,
   updateSubject,
 } from '../models/subject.model';
-import {
-  createNoteBySubjectId,
-  deleteNoteById,
-  deleteNoteBySubjectId,
-  getNoteBySubjectId,
-} from '../models/note.model';
 import log from '../utils/logger';
-import { BlobServiceClient } from '@azure/storage-blob';
-import { getBlobName } from '../utils/utilsfs';
 
 export const getAllSubjectService = async () => {
   const pool = await sqlConnect();
@@ -74,37 +64,6 @@ export const getSubjectByUserIdService = async (user_id: number) => {
   }
 };
 
-export const uploadPDFToStorageService = async (file: any) => {
-  const blobServiceClient = BlobServiceClient.fromConnectionString(
-    config.get('storage_connection_string'),
-  );
-
-  const containerClient = blobServiceClient.getContainerClient(
-    config.get('storage_container_name'),
-  );
-
-  console.log('[uploadPDFToStorageService] : file : ', file);
-  const blobName = getBlobName(file.originalname);
-  const client = containerClient.getBlockBlobClient(blobName);
-
-  const response = await client.uploadData(file, {
-    blobHTTPHeaders: {
-      blobContentType: 'application/pdf',
-    },
-  });
-
-  console.log(response);
-  if (response._response.status !== 201) {
-    // throw new Error(
-    //   `Error uploading document ${client.name} to container ${client.containerName}`,
-    // );
-    return null;
-  } else {
-    console.log('Successful upload, bloblName : ', blobName);
-    return blobName;
-  }
-};
-
 export const deleteUserSubjectService = async (user_subjects_id: number) => {
   const result = await deleteUserSubject(user_subjects_id);
   if (result) {
@@ -130,52 +89,6 @@ export const updateSubjectIdService = async (
 
   if (result) {
     console.log(result?.recordset);
-    return result.recordset;
-  } else {
-    console.log('null');
-    return null;
-  }
-};
-
-export const createNotesBySubjectIdService = async (
-  subject_id: number,
-  note_title: string,
-  note_url: string,
-) => {
-  const bloblUrl = config.get('storage_blob_url');
-  const newNoteUrl = `${bloblUrl}${note_url}`;
-  const result = await createNoteBySubjectId({
-    note_title,
-    subject_id,
-    note_url: newNoteUrl,
-  });
-
-  if (result) {
-    console.log(result);
-    return result;
-  } else {
-    console.log('null');
-    return null;
-  }
-};
-
-export const getNotesBySubjectIdService = async (subject_id: number) => {
-  const result = await getNoteBySubjectId(subject_id);
-
-  if (result) {
-    console.log(result);
-    return result.recordset;
-  } else {
-    console.log('null');
-    return null;
-  }
-};
-
-export const deleteNotesBySubjectIdService = async (subject_id: number) => {
-  const result = await deleteNoteBySubjectId(subject_id);
-
-  if (result) {
-    console.log(result);
     return result.recordset;
   } else {
     console.log('null');

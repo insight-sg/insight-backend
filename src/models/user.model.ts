@@ -26,14 +26,16 @@ export const createUser = async ({ username, password, email, name }: User) => {
     .input('username', VarChar, username)
     .input('password', VarChar, password)
     .input('email', VarChar, email)
-    .input('name', VarChar, email)
+    .input('name', VarChar, name)
     .query(
-      'INSERT INTO users(username,password,email,name) VALUES(@username,@password,@email,@name)',
+      'INSERT INTO users(username,password,email,name) VALUES(@username,@password,@email,@name) ; SELECT SCOPE_IDENTITY() AS id',
     );
 
-  console.log(result);
-
-  return result;
+  if (result?.rowsAffected[0] == 1) {
+    return result.recordset[0].id;
+  } else {
+    return null;
+  }
 };
 
 export const getUser = async ({ username, password }: IUserLogin) => {
@@ -47,10 +49,10 @@ export const getUser = async ({ username, password }: IUserLogin) => {
 
   const userpassword = result?.recordset[0].password;
 
-  if (password != userpassword) {
+  if (!password.match(userpassword)) {
     return null;
   } else {
-    return result?.recordset[0].user_id;
+    return result?.recordset[0];
   }
 };
 
