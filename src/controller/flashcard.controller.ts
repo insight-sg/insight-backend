@@ -90,14 +90,21 @@ export const getAllFlashcardBySubjectIdController = async (
 ) => {
   try {
     const { subject_id } = req.params;
-    const result = getFlashcardBySubjectIdService(Number(subject_id));
+    const flashcards = await getFlashcardBySubjectIdService(Number(subject_id));
 
-    console.log(result);
+    console.log('getFlashcardBySubjectIdService result :', flashcards);
 
-    if (!result) {
+    if (!flashcards) {
       res.status(404).send({ message: 'Error', data: {} });
     } else {
-      res.status(200).send({ message: 'Success', data: { result } });
+      for (let i = 0; i < flashcards.length; i++) {
+        flashcards[i].flashcard_item =
+          await getFlashcardItemByFlashcardIdService(
+            flashcards[i].flashcard_id,
+          );
+      }
+
+      res.status(200).send({ message: 'Success', data: { flashcards } });
     }
   } catch (err: any) {
     log.error('Error in getAllFlashcardBySubjectIdController :', err);
@@ -111,10 +118,13 @@ export const getAllFlashcardItemByFlashcardIdController = async (
   res: Response,
 ) => {
   try {
+    log.info('[getAllFlashcardItemByFlashcardIdController]');
     const { flashcard_id } = req.params;
-    const result = getFlashcardItemByFlashcardIdService(Number(flashcard_id));
+    const result = await getFlashcardItemByFlashcardIdService(
+      Number(flashcard_id),
+    );
 
-    console.log(result);
+    console.log('result from getFlashcardItemByFlashcardIdService : ', result);
 
     if (!result) {
       res.status(404).send({ message: 'Error', data: {} });

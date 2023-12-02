@@ -6,12 +6,14 @@ export interface Note {
   note_title: string;
   note_url?: string;
   subject_id: number;
+  note_text_chunk?: string;
 }
 
 export const createNoteBySubjectId = async ({
   note_title,
   subject_id,
   note_url,
+  note_text_chunk,
 }: Note) => {
   const pool = await sqlConnect();
   const result = await pool
@@ -19,8 +21,9 @@ export const createNoteBySubjectId = async ({
     .input('note_title', VarChar, note_title)
     .input('subject_id', Int, subject_id)
     .input('note_url', VarChar, note_url)
+    .input('note_text_chunk', VarChar, note_text_chunk)
     .query(
-      'INSERT INTO notes(note_title,subject_id,note_url) VALUES(@note_title,@subject_id,@note_url); SELECT SCOPE_IDENTITY() AS id',
+      'INSERT INTO notes(note_title,subject_id,note_url,note_text_chunk) VALUES(@note_title,@subject_id,@note_url,@note_text_chunk); SELECT SCOPE_IDENTITY() AS id',
     );
 
   console.log(result);
