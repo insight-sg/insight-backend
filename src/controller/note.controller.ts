@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-
+import config from 'config';
 import {
   createNotesBySubjectIdService,
   getNotesBySubjectIdService,
@@ -15,8 +15,13 @@ export const createNoteBySubjectIdController = async (
   log.info('[createNoteBySubjectIdController]');
   try {
     const { subject_id, note_title } = req.body;
+    console.log('[createNoteBySubjectIdController] subject id : ', subject_id);
+    console.log(
+      '[createNoteBySubjectIdController] note_title id : ',
+      note_title,
+    );
     const file = req.file;
-    console.log('req.file ', req.file);
+    console.log('[createNoteBySubjectIdController] req.file ', req.file);
     if (!file) {
       res.status(404).send({ message: 'Error', data: { msg: 'No file' } });
       return;
@@ -31,9 +36,19 @@ export const createNoteBySubjectIdController = async (
       return;
     }
 
+    console.log(
+      '[createNoteBySubjectIdController] uploadResponse ',
+      uploadResponse,
+    );
+    const bloblUrl = config.get('storage_blob_url');
+    const newNoteUrl = `${bloblUrl}${uploadResponse}`;
     const textResponse =
-      await getTextFromAzureDocumentIntelligenceService(uploadResponse);
+      await getTextFromAzureDocumentIntelligenceService(newNoteUrl);
 
+    console.log(
+      '[createNoteBySubjectIdController] uploadResponse ',
+      textResponse,
+    );
     if (!textResponse) {
       res.status(404).send({
         message: 'Error',
@@ -45,7 +60,8 @@ export const createNoteBySubjectIdController = async (
     const note = await createNotesBySubjectIdService(
       subject_id,
       note_title,
-      uploadResponse,
+      newNoteUrl,
+      textResponse,
     );
 
     if (!note) {
@@ -71,7 +87,7 @@ export const getAllNoteBySubjectIdController = async (
 ) => {
   try {
     const { subject_id } = req.params;
-    const result = getNotesBySubjectIdService(Number(subject_id));
+    const result = await getNotesBySubjectIdService(Number(subject_id));
 
     console.log(result);
 
