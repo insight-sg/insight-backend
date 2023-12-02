@@ -19,18 +19,40 @@ export const createQuizBySubjectIdController = async (
 ) => {
   log.info('[createQuizBySubjectIdController]');
   try {
-    const { quiz_title, subject_id } = req.body;
+    const { subject_id, quiz_title, quiz } = req.body;
 
-    const quiz = await createQuizBySubjectIdService(quiz_title, subject_id);
-
-    if (!quiz) {
+    const quizResponse = await createQuizBySubjectIdService(
+      quiz_title,
+      subject_id,
+    );
+    if (!quizResponse) {
       res
         .status(404)
         .send({ message: 'Error', data: { msg: 'Unable to create quiz' } });
     } else {
-      res.status(200).json({
-        message: 'Success',
-        data: { quiz_id: quiz },
+      const promises = [];
+      for (let i = 0; i < quiz.length; i++) {
+        promises.push(
+          createQuestionByQuizIdService(quizResponse, quiz[i].Question).then(
+            async (question_id) => {
+              console.log('get question id ', question_id);
+              for (let j = 0; j < quiz[i].Choices.length; j++) {
+                await createChoiceByQuestionIdService(
+                  question_id,
+                  quiz[i].Choices[j].Choice,
+                  quiz[i].Choices[j].Correct,
+                );
+              }
+            },
+          ),
+        );
+      }
+      await Promise.all(promises).then((result) => {
+        console.log('In promise.all.then resutlt : ', result);
+        res.status(200).json({
+          message: 'Success',
+          data: { quiz_id: quizResponse },
+        });
       });
     }
   } catch (err: any) {

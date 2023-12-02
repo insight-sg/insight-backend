@@ -51,6 +51,10 @@ export const createChoiceByQuestionIdService = async (
   choice: string,
   correct: boolean,
 ) => {
+  log.info('createChoiceByQuestionIdService');
+  console.log('question_id :', question_id);
+  console.log('choice :', choice);
+  console.log('choice :', choice);
   const result = await createChoiceByQuestionId({
     question_id,
     choice,

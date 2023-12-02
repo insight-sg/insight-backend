@@ -54,7 +54,7 @@ export const createQuestionByQuizId = async ({
     .input('quiz_id', Int, quiz_id)
     .input('question', VarChar, question)
     .query(
-      'INSERT INTO question(quiz_id,question) VALUES(@quiz_id,@question); SELECT SCOPE_IDENTITY() AS id',
+      'INSERT INTO questions(quiz_id,question) VALUES(@quiz_id,@question); SELECT SCOPE_IDENTITY() AS id',
     );
   console.log(result);
 
@@ -164,26 +164,12 @@ export const updateQuizScoreByQuizId = async (
   }
 };
 
-export const deleteFlashcardById = async (flashcard_id: number) => {
+export const deleteQuizById = async (quiz_id: number) => {
   const pool = await sqlConnect();
   const result = await pool
     ?.request()
-    .input('flashcard_id', Int, flashcard_id)
-    .query('DELETE FROM flashcards WHERE flashcard_id=@flashcard_id');
-
-  console.log(result);
-  if (result) {
-    return result;
-  } else {
-    return null;
-  }
-};
-export const deleteFlashcardBySubjectId = async (subject_id: number) => {
-  const pool = await sqlConnect();
-  const result = await pool
-    ?.request()
-    .input('subject_id', Int, subject_id)
-    .query('DELETE FROM flashcards WHERE subject_id=@subject_id');
+    .input('quiz_id', Int, quiz_id)
+    .query('DELETE FROM quiz WHERE quiz_id=@quiz_id');
 
   console.log(result);
   if (result) {

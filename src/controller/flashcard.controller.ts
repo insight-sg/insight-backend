@@ -40,10 +40,10 @@ export const createFlashcardBySubjectIdController = async (
       }
       await Promise.all(promises).then((result) => {
         console.log('In promise.all.then resutl : ', result);
-      });
-      res.status(200).json({
-        message: 'Success',
-        data: { flashcard: flashcard },
+        res.status(200).json({
+          message: 'Success',
+          data: { flashcard: flashcard },
+        });
       });
     }
   } catch (err: any) {
