@@ -43,7 +43,7 @@ export const routes = (app: Express) => {
 
   app.post('/api/speechtotext', processFile, speechToTextController);
 
-  app.get('/api/loginuser', getUserController);
+  app.post('/api/loginuser', getUserController);
   app.post('/api/registeruser', createUserController);
 
   app.get('/api/subjects', getAllSubjectController);

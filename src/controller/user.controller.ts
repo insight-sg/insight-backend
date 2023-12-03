@@ -8,7 +8,7 @@ export const getUserController = async (req: Request, res: Response) => {
     const { username, password } = req.body;
     const user = await getUserService(username, password);
 
-    console.log('subjects : ', user);
+    console.log('user : ', user);
     if (!user) {
       res.status(404).send({ message: 'Error', data: {} });
     } else {
@@ -34,7 +34,7 @@ export const createUserController = async (req: Request, res: Response) => {
         .status(404)
         .send({ message: 'Error', data: { msg: 'Failed insert subject' } });
     } else {
-      res.status(200).send({ message: 'Success', data: { subject_id: user } });
+      res.status(200).send({ message: 'Success', data: { user_id: user } });
     }
   } catch (err: any) {
     log.error('Error in createSubjectController :');
