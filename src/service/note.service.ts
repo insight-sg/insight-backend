@@ -16,13 +16,13 @@ export const createNotesBySubjectIdService = async (
   subject_id: number,
   note_title: string,
   note_url: string,
+  note_text_chunk: string[],
 ) => {
-  const bloblUrl = config.get('storage_blob_url');
-  const newNoteUrl = `${bloblUrl}${note_url}`;
   const result = await createNoteBySubjectId({
     note_title,
     subject_id,
-    note_url: newNoteUrl,
+    note_url,
+    note_text_chunk: note_text_chunk.join(' '),
   });
 
   if (result) {
@@ -63,6 +63,7 @@ export const getTextFromAzureDocumentIntelligenceService = async (
 ) => {
   const key = config.get<string>('document_intelligence_key');
   const endpoint = config.get<string>('document_intelligence_endpoint');
+  const storage_blob_url = config.get<string>('storage_blob_url');
 
   const client = new DocumentAnalysisClient(
     endpoint,

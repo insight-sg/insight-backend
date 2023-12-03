@@ -17,13 +17,17 @@ export const getFrontBackFromOpenAIService = async (text_chunk: []) => {
   const deployementId = 'insight-chat-v1';
   const result = await client.getChatCompletions(deployementId, message);
 
-  console.log('result.choices From OpenAI : ', result.choices);
+  console.log(
+    '[getFrontBackFromOpenAIService] result.choices From OpenAI : ',
+    result.choices,
+  );
   if (result.choices[0].message?.content) {
     const jsonArray = result.choices[0].message.content
       .split('\n')
       .filter(Boolean) as any;
 
     // Parse each JSON string into an object
+
     const arrayOfObjects = jsonArray.map(JSON.parse);
 
     console.log(arrayOfObjects);
@@ -49,11 +53,15 @@ export const getQuestionsAndChoicesOpenAIService = async (text_chunk: []) => {
   const deployementId = 'insight-chat-v1';
   const result = await client.getChatCompletions(deployementId, message);
 
-  console.log('result.choices From OpenAI : ', result.choices);
+  console.log(
+    '[getQuestionsAndChoicesOpenAIService] result.choices From OpenAI : ',
+    result.choices,
+  );
   if (result.choices[0].message?.content) {
-    const jsonArray = result.choices[0].message.content
-      .split('\n')
-      .filter(Boolean) as any;
+    const fixedJsonArray = result.choices[0].message?.content
+      .replace(/'/g, '"')
+      .replace(/(\w+):/g, '"$1":');
+    const jsonArray = fixedJsonArray.split('\n').filter(Boolean) as any;
 
     // Parse each JSON string into an object
     const arrayOfObjects = jsonArray.map(JSON.parse);
