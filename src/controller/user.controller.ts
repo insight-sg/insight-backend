@@ -2,10 +2,16 @@ import { Request, Response } from 'express';
 import { createUserService, getUserService } from '../service/user.service';
 import log from '../utils/logger';
 
-export const getUserController = async (req: Request, res: Response) => {
+export const getUserController = async (req: Request<any, any, any, { username?: string; password?: string }>, res: Response) => {
   log.info('[getUserController]');
   try {
-    const { username, password } = req.body;
+    const { username, password } = req.query;
+
+    if (!username || !password) {
+      res.status(400).send({ message: 'Bad Request: Missing username or password', data: {} });
+      return;
+    }
+
     const user = await getUserService(username, password);
 
     console.log('subjects : ', user);
@@ -15,8 +21,7 @@ export const getUserController = async (req: Request, res: Response) => {
       res.status(200).send({ message: 'Success', data: { user } });
     }
   } catch (err: any) {
-    log.error('Error in getAllSubjectController :');
-    console.error('err ', err);
+    log.error('Error in getUserController :', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };
