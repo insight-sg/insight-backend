@@ -34,6 +34,7 @@ import {
 import {
   createUserController,
   getUserController,
+  updateUserController
 } from './controller/user.controller';
 export const routes = (app: Express) => {
   app.get('/healthcheck', (req: Request, res: Response) => {
@@ -45,6 +46,7 @@ export const routes = (app: Express) => {
 
   app.get('/api/loginuser/', getUserController);
   app.post('/api/registeruser', createUserController);
+  app.put('/api/updateuser/', updateUserController);
 
   app.get('/api/subjects', getAllSubjectController);
   app.post('/api/subjects/', createSubjectController);
