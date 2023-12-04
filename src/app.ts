@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const PORT = config.get<number>('port');
+const TEST = config.get<string>('storage_blob_url');
 const app: Express = express();
 
 app.use(express.json());
@@ -14,5 +15,6 @@ app.use(cors());
 
 app.listen(PORT, () => {
   logger.info(`App is running at https://localhost:${PORT}`);
+  console.log('TEST config : ', TEST);
   routes(app);
 });
