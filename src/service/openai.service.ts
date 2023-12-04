@@ -11,8 +11,8 @@ export const getFrontBackFromOpenAIService = async (text_chunk: []) => {
     { role: 'system', content: prompting },
     { role: 'user', content: prompt },
   ];
-  const endpoint = config.get<string>('openai_endpoint');
-  const key = config.get<string>('openai_key');
+  const endpoint = process.env.AZURE_OPENAI_ENDPOINT ?? '';
+  const key = process.env.AZURE_OPENAI_KEY ?? '';
   const client = new OpenAIClient(endpoint, new AzureKeyCredential(key));
   const deployementId = 'insight-chat-v1';
   const result = await client.getChatCompletions(deployementId, message);
@@ -47,8 +47,8 @@ export const getQuestionsAndChoicesOpenAIService = async (text_chunk: []) => {
     { role: 'system', content: prompting },
     { role: 'user', content: prompt },
   ];
-  const endpoint = config.get<string>('openai_endpoint');
-  const key = config.get<string>('openai_key');
+  const endpoint = process.env.AZURE_OPENAI_ENDPOINT ?? '';
+  const key = process.env.AZURE_OPENAI_KEY ?? '';
   const client = new OpenAIClient(endpoint, new AzureKeyCredential(key));
   const deployementId = 'insight-chat-v1';
   const result = await client.getChatCompletions(deployementId, message);

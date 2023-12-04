@@ -61,9 +61,9 @@ export const deleteNotesBySubjectIdService = async (subject_id: number) => {
 export const getTextFromAzureDocumentIntelligenceService = async (
   pdfUrl: string,
 ) => {
-  const key = config.get<string>('document_intelligence_key');
-  const endpoint = config.get<string>('document_intelligence_endpoint');
-  const storage_blob_url = config.get<string>('storage_blob_url');
+  const key = process.env.AZURE_DOCUMENT_INTELLIGENCE_KEY ?? '';
+  const endpoint = process.env.AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT ?? '';
+  const storage_blob_url = process.env.AZURE_STORAGE_BLOB_URL;
 
   const client = new DocumentAnalysisClient(
     endpoint,
@@ -97,11 +97,11 @@ export const getTextFromAzureDocumentIntelligenceService = async (
 
 export const uploadPDFToStorageService = async (file: any) => {
   const blobServiceClient = BlobServiceClient.fromConnectionString(
-    config.get('storage_connection_string'),
+    process.env.AZURE_STORAGE_CONNECTION_STRING ?? '',
   );
 
   const containerClient = blobServiceClient.getContainerClient(
-    config.get('storage_container_name'),
+    process.env.AZURE_STORAGE_CONTAINER_NAME ?? '',
   );
 
   console.log('[uploadPDFToStorageService] : file : ', file);
