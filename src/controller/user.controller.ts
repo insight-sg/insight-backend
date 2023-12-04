@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createUserService, getUserService } from '../service/user.service';
+import { createUserService, getUserService, updateUserService } from '../service/user.service';
 import log from '../utils/logger';
 
 export const getUserController = async (req: Request<any, any, any, { username?: string; password?: string }>, res: Response) => {
@@ -43,6 +43,28 @@ export const createUserController = async (req: Request, res: Response) => {
     }
   } catch (err: any) {
     log.error('Error in createSubjectController :');
+    console.error('err ', err);
+    res.status(500).send({ message: 'Internal Service Error', data: {} });
+  }
+};
+
+export const updateUserController = async (req: Request, res: Response) => {
+  log.info('[updateUserController]');
+  try {
+    const { user_id, username, password, email, name } = req.body;
+    console.log(req.body);
+    const user = await updateUserService( user_id, username, password, email, name );
+
+    console.log('user : ', user);
+    if (!user) {
+      res
+        .status(404)
+        .send({ message: 'Error', data: { msg: 'Failed update user' } });
+    } else {
+      res.status(200).send({ message: 'Success', data: { user_id: user } });
+    }
+  } catch (err: any) {
+    log.error('Error in updateUserController :');
     console.error('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }

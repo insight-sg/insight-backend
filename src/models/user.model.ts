@@ -16,7 +16,10 @@ interface IUserLogin {
 
 interface IUserUpdate {
   user_id: number;
+  username: string;
   password: string;
+  email: string;
+  name: string;
 }
 
 export const createUser = async ({ username, password, email, name }: User) => {
@@ -56,7 +59,7 @@ export const getUser = async ({ username, password }: IUserLogin) => {
   }
 };
 
-export const updateUser = async ({ user_id, password }: IUserUpdate) => {
+export const updateUser = async ({ user_id, username, password, email, name }: IUserUpdate) => {
   const pool = await sqlConnect();
   const result = await pool
     ?.request()
@@ -72,14 +75,17 @@ export const updateUser = async ({ user_id, password }: IUserUpdate) => {
       ?.request()
       .input('password', VarChar, password)
       .input('user_id', Int, user_id)
-      .query('UPDATE users SET password=@password WHERE user_id=@user_id');
+      .input('name', VarChar, name)
+      .input('username', VarChar, username)
+      .input('email', VarChar, email)
+      .query('UPDATE users SET username=@username, email=@email, password=@password, name=@name WHERE user_id=@user_id');
 
     console.log('updated : ', result);
-
-    if (result?.recordset.length == 0) {
-      return null;
+    
+    if (result?.rowsAffected[0] == 1) {
+      return user_id;
     } else {
-      return result?.recordset[0].user_id;
+      return null;
     }
   }
 };
