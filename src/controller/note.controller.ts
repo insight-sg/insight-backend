@@ -40,7 +40,7 @@ export const createNoteBySubjectIdController = async (
       '[createNoteBySubjectIdController] uploadResponse ',
       uploadResponse,
     );
-    const bloblUrl = config.get('storage_blob_url');
+    const bloblUrl = process.env.AZURE_STORAGE_BLOB_URL;
     const newNoteUrl = `${bloblUrl}${uploadResponse}`;
     const textResponse =
       await getTextFromAzureDocumentIntelligenceService(newNoteUrl);
