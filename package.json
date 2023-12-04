@@ -2,11 +2,11 @@
   "name": "insight-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/app.ts",
   "scripts": {
     "clean": "rimraf ./build",
     "build": "npm-run-all lint format clean && tsc",
-    "start": "node src",
+    "start": "ts-node src/app.ts",
     "local": "ts-node src",
     "local:watch": "nodemon src -e ts,json --exec 'npm run local'",
     "lint": "eslint src",
