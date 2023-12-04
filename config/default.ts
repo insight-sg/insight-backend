@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default {
-  port: 8080,
+  port: process.env.PORT,
   config: {
     user: process.env.SQL_USER ?? '',
     password: process.env.SQL_PASSWORD ?? '',

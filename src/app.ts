@@ -6,13 +6,13 @@ import { routes } from './routes';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const port = config.get<number>('port');
+const PORT = config.get<number>('PORT');
 const app: Express = express();
 
 app.use(express.json());
 app.use(cors());
 
-app.listen(port, () => {
-  logger.info(`App is running at https://localhost:${port}`);
+app.listen(PORT, () => {
+  logger.info(`App is running at https://localhost:${PORT}`);
   routes(app);
 });

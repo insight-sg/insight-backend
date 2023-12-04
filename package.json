@@ -4,9 +4,8 @@
   "description": "",
   "main": "src/app.ts",
   "scripts": {
-    "clean": "rimraf ./build",
-    "build": "npm-run-all lint format clean && tsc",
     "start": "ts-node src/app.ts",
+    "clean": "rimraf ./build",
     "local": "ts-node src",
     "local:watch": "nodemon src -e ts,json --exec 'npm run local'",
     "lint": "eslint src",
