@@ -6,7 +6,7 @@ import { routes } from './routes';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const PORT = config.get<number>('PORT');
+const PORT = config.get<number>('port');
 const app: Express = express();
 
 app.use(express.json());
