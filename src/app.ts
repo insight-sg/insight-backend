@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const PORT = config.get<number>('port');
-const TEST = config.get<string>('storage_blob_url');
+const TEST = process.env.SQL_SERVER;
 const app: Express = express();
 
 app.use(express.json());
