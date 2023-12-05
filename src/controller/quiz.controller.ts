@@ -7,6 +7,7 @@ import {
   createQuizBySubjectIdService,
   getChoiceByQuestionIdService as getChoiceByQuestionIdService,
   getQuestionByQuizIdService,
+  getQuizAttemptsByQuizIdService,
   getQuizBySubjectIdService,
   updateQuizScoreByQuizIdService,
 } from '../service/quiz.service';
@@ -135,6 +136,10 @@ export const getAllQuizzesbyUserIdController = async (
           subjects[i].subject_id,
         );
         for (let j = 0; j < subjects[i].quizzes.length; j++) {
+          subjects[i].quizzes[j].attempts =
+            await getQuizAttemptsByQuizIdService(
+              subjects[i].quizzes[j].quiz_id,
+            );
           subjects[i].quizzes[j].questions = await getQuestionByQuizIdService(
             subjects[i].quizzes[j].quiz_id,
           );
@@ -169,6 +174,9 @@ export const getAllQuizBySubjectIdController = async (
 
     if (quizzes) {
       for (let j = 0; j < quizzes.length; j++) {
+        quizzes[j].attempts = await getQuizAttemptsByQuizIdService(
+          quizzes[j].quiz_id,
+        );
         quizzes[j].questions = await getQuestionByQuizIdService(
           quizzes[j].quiz_id,
         );
@@ -289,3 +297,25 @@ export const getQuestionAndAnswerFromOpenAIController = async (
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };
+
+// export const getQuizStatsFromUserIdController = async (
+//   req: Request,
+//   res: Response,
+// ) => {
+//   try {
+//     log.info('[getQuestionAndAnswerFromOpenAIController]');
+//     const { text_chunk } = req.body;
+
+//     console.log('getFrontBackFromOpenAIService result :', result);
+
+//     if (!result) {
+//       res.status(404).send({ message: 'Error', data: {} });
+//     } else {
+//       res.status(200).send({ message: 'Success', data: { result } });
+//     }
+//   } catch (err: any) {
+//     log.error('Error in getQuestionAndAnswerFromOpenAIController :', err);
+//     console.error('err ', err);
+//     res.status(500).send({ message: 'Internal Service Error', data: {} });
+//   }
+// };

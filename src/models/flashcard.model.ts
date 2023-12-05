@@ -27,9 +27,12 @@ export const createFlashcardBySubjectId = async ({
     .query(
       'INSERT INTO flashcard(flashcard_title,subject_id) VALUES(@flashcard_title,@subject_id); SELECT SCOPE_IDENTITY() AS id',
     );
-  console.log(result);
 
   if (result?.rowsAffected[0] == 1) {
+    console.log(
+      '[createFlashcardBySubjectId result] :',
+      result.recordset[0].id,
+    );
     return result.recordset[0].id;
   } else {
     return null;

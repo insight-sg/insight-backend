@@ -11,7 +11,10 @@ interface User {
 
 interface IUserLogin {
   username: string;
-  password: string;
+}
+interface IExistUser {
+  username: string;
+  email: string;
 }
 
 interface IUserUpdate {
@@ -41,7 +44,7 @@ export const createUser = async ({ username, password, email, name }: User) => {
   }
 };
 
-export const getUser = async ({ username, password }: IUserLogin) => {
+export const getUser = async ({ username }: IUserLogin) => {
   const pool = await sqlConnect();
   const result = await pool
     ?.request()
@@ -50,16 +53,36 @@ export const getUser = async ({ username, password }: IUserLogin) => {
 
   console.log(result);
 
-  const userpassword = result?.recordset[0].password;
-
-  if (!password.match(userpassword)) {
+  if (!result) {
     return null;
   } else {
     return result?.recordset[0];
   }
 };
 
-export const updateUser = async ({ user_id, username, password, email, name }: IUserUpdate) => {
+export const getExistingUser = async ({ username, email }: IExistUser) => {
+  const pool = await sqlConnect();
+  const result = await pool
+    ?.request()
+    .input('username', VarChar, username)
+    .input('email', VarChar, email)
+    .query('SELECT * FROM users WHERE username=@username OR email=@email');
+
+  console.log(result);
+
+  if (!result) {
+    return null;
+  } else {
+    return result?.recordset[0];
+  }
+};
+export const updateUser = async ({
+  user_id,
+  username,
+  password,
+  email,
+  name,
+}: IUserUpdate) => {
   const pool = await sqlConnect();
   const result = await pool
     ?.request()
@@ -78,10 +101,12 @@ export const updateUser = async ({ user_id, username, password, email, name }: I
       .input('name', VarChar, name)
       .input('username', VarChar, username)
       .input('email', VarChar, email)
-      .query('UPDATE users SET username=@username, email=@email, password=@password, name=@name WHERE user_id=@user_id');
+      .query(
+        'UPDATE users SET username=@username, email=@email, password=@password, name=@name WHERE user_id=@user_id',
+      );
 
     console.log('updated : ', result);
-    
+
     if (result?.rowsAffected[0] == 1) {
       return user_id;
     } else {

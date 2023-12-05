@@ -101,10 +101,8 @@ export const uploadPDFToStorageService = async (file: any) => {
   );
 
   const containerClient = blobServiceClient.getContainerClient(
-    process.env.AZURE_STORAGE_CONTAINER_NAME ?? '',
+    process.env.AZURE_STORAGE_BLOB_URL ?? '',
   );
-
-  console.log('[uploadPDFToStorageService] : file : ', file);
   const blobName = getBlobName(file.originalname);
   const client = containerClient.getBlockBlobClient(blobName);
 

@@ -9,6 +9,8 @@ import {
 } from '../service/flashcard.service';
 import { getFrontBackFromOpenAIService } from '../service/openai.service';
 import { getSubjectByUserIdService } from '../service/subject.service';
+import { Int, VarChar } from 'mssql';
+import { sqlConnect } from 'utils/connection';
 
 export const createFlashcardBySubjectIdController = async (
   req: Request,
@@ -39,7 +41,6 @@ export const createFlashcardBySubjectIdController = async (
         );
       }
       await Promise.all(promises).then((result) => {
-        console.log('In promise.all.then resutl : ', result);
         res.status(200).json({
           message: 'Success',
           data: { flashcard: flashcard },
@@ -48,7 +49,7 @@ export const createFlashcardBySubjectIdController = async (
     }
   } catch (err: any) {
     log.error('Error in createFlashcardBySubjectIdController :', err);
-    console.error('err ', err);
+    console.log('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };
@@ -79,7 +80,7 @@ export const createFlashcardItemByFlashcardIdController = async (
     }
   } catch (err: any) {
     log.error('Error in createFlashcardItemByFlashcardIdController :', err);
-    console.error('err ', err);
+    console.log('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };
@@ -92,7 +93,7 @@ export const getAllFlashcardBySubjectIdController = async (
     const { subject_id } = req.params;
     const flashcards = await getFlashcardBySubjectIdService(Number(subject_id));
 
-    console.log('getFlashcardBySubjectIdService result :', flashcards);
+    // console.log('getFlashcardBySubjectIdService result :', flashcards);
 
     if (!flashcards) {
       res.status(404).send({ message: 'Error', data: {} });
@@ -108,7 +109,7 @@ export const getAllFlashcardBySubjectIdController = async (
     }
   } catch (err: any) {
     log.error('Error in getAllFlashcardBySubjectIdController :', err);
-    console.error('err ', err);
+    console.log('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };
@@ -124,7 +125,7 @@ export const getAllFlashcardItemByFlashcardIdController = async (
       Number(flashcard_id),
     );
 
-    console.log('result from getFlashcardItemByFlashcardIdService : ', result);
+    // console.log('result from getFlashcardItemByFlashcardIdService : ', result);
 
     if (!result) {
       res.status(404).send({ message: 'Error', data: {} });
@@ -133,7 +134,7 @@ export const getAllFlashcardItemByFlashcardIdController = async (
     }
   } catch (err: any) {
     log.error('Error in getAllFlashcardItemByFlashcardIdController :', err);
-    console.error('err ', err);
+    console.log('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };
@@ -148,7 +149,7 @@ export const getFrontBackFromOpenAIController = async (
     console.log('text_chunk : ', text_chunk);
     const result = await getFrontBackFromOpenAIService(text_chunk);
 
-    console.log('getFrontBackFromOpenAIService result :', result);
+    // console.log('getFrontBackFromOpenAIService result :', result);
 
     if (!result) {
       res.status(404).send({ message: 'Error', data: {} });
@@ -157,7 +158,7 @@ export const getFrontBackFromOpenAIController = async (
     }
   } catch (err: any) {
     log.error('Error in getFrontBackFromOpenAIController :', err);
-    console.error('err ', err);
+    console.log('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };
@@ -170,11 +171,10 @@ export const getAllFlashcardbyUserIdController = async (
     const { user_id } = req.params;
     const subjects = await getSubjectByUserIdService(Number(user_id));
 
-    console.log('subjects : ', subjects);
+    // console.log('subjects : ', subjects);
     if (!subjects) {
       res.status(404).send({ message: 'Error', data: {} });
     } else {
-      console.log('subjects length : ');
       for (let i = 0; i < subjects.length; i++) {
         subjects[i].flashcards = await getFlashcardBySubjectIdService(
           subjects[i].subject_id,
@@ -190,7 +190,7 @@ export const getAllFlashcardbyUserIdController = async (
     }
   } catch (err: any) {
     log.error('Error in getAllFlashcardbyUserIdController :');
-    console.error('err ', err);
+    console.log('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };
