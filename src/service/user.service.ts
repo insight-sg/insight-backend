@@ -1,5 +1,10 @@
 import log from '../utils/logger';
-import { createUser, getUser, updateUser } from '../models/user.model';
+import {
+  createUser,
+  getExistingUser,
+  getUser,
+  updateUser,
+} from '../models/user.model';
 
 export const createUserService = async (
   username: string,
@@ -23,9 +28,9 @@ export const createUserService = async (
   }
 };
 
-export const getUserService = async (username: string, password: string) => {
+export const getUserService = async (username: string) => {
   log.info('[getUserService]');
-  const result = await getUser({ username, password });
+  const result = await getUser({ username });
   console.log('[result] : ', result);
   if (result) {
     return result;
@@ -35,7 +40,29 @@ export const getUserService = async (username: string, password: string) => {
   }
 };
 
-export const updateUserService = async (user_id: number, username: string, password: string, email: string, name: string) => {
+export const getExistingUserService = async (
+  username: string,
+  email: string,
+) => {
+  log.info('[getExistingUserService]');
+  const result = await getExistingUser({ username, email });
+
+  console.log('[getExistingUserService] result : ', result);
+
+  if (result) {
+    return result;
+  } else {
+    return null;
+  }
+};
+
+export const updateUserService = async (
+  user_id: number,
+  username: string,
+  password: string,
+  email: string,
+  name: string,
+) => {
   log.info('[updateUserSerivce]');
   const result = await updateUser({ user_id, username, password, email, name });
   console.log('[result] : ', result);

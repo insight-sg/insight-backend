@@ -5,6 +5,7 @@ import {
   createQuizBySubjectId,
   getChoiceByQuestionId,
   getQuestionByQuizId,
+  getQuizAttemptByQuizId,
   getQuizBySubjectId,
   updateQuizScoreByQuizId,
 } from '../models/quiz.model';
@@ -100,6 +101,19 @@ export const getChoiceByQuestionIdService = async (question_id: number) => {
 
   if (result) {
     console.log('[getChoiceByQuestionIdService] result :', result);
+    return result.recordset;
+  } else {
+    console.log('null');
+    return null;
+  }
+};
+
+export const getQuizAttemptsByQuizIdService = async (quiz_id: number) => {
+  log.info('[getQuizAttemptsByQuizIdService]');
+  const result = await getQuizAttemptByQuizId(quiz_id);
+
+  if (result) {
+    console.log('[getQuizAttemptsByQuizIdService] result :', result);
     return result.recordset;
   } else {
     console.log('null');

@@ -148,16 +148,28 @@ export const updateQuizScoreByQuizId = async (
   if (result?.recordset.length == 0) {
     return null;
   } else {
-    const result = await pool
+    const insertQuizAttempt = await pool
       ?.request()
-      .input('quiz_score', Int, quiz_score)
       .input('quiz_id', Int, quiz_id)
-      .query('UPDATE quiz SET quiz_score=@quiz_score WHERE quiz_id=@quiz_id');
+      .input('quiz_score', Int, quiz_score)
+      .query(
+        'INSERT INTO quiz_attempts (quiz_id,quiz_score) VALUES (@quiz_id,@quiz_score)',
+      );
 
-    console.log('updated : ', result);
+    if (insertQuizAttempt) {
+      const result = await pool
+        ?.request()
+        .input('quiz_score', Int, quiz_score)
+        .input('quiz_id', Int, quiz_id)
+        .query('UPDATE quiz SET quiz_score=@quiz_score WHERE quiz_id=@quiz_id');
 
-    if (result) {
-      return result;
+      console.log('updated : ', result);
+
+      if (result) {
+        return result;
+      } else {
+        return null;
+      }
     } else {
       return null;
     }
@@ -170,6 +182,21 @@ export const deleteQuizById = async (quiz_id: number) => {
     ?.request()
     .input('quiz_id', Int, quiz_id)
     .query('DELETE FROM quiz WHERE quiz_id=@quiz_id');
+
+  console.log(result);
+  if (result) {
+    return result;
+  } else {
+    return null;
+  }
+};
+
+export const getQuizAttemptByQuizId = async (quiz_id: number) => {
+  const pool = await sqlConnect();
+  const result = await pool
+    ?.request()
+    .input('quiz_id', Int, quiz_id)
+    .query('SELECT * FROM quiz_attempts WHERE quiz_id=@quiz_id');
 
   console.log(result);
   if (result) {
