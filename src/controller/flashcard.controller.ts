@@ -30,21 +30,16 @@ export const createFlashcardBySubjectIdController = async (
         data: { msg: 'Unable to create flashcard' },
       });
     } else {
-      const promises = [];
       for (let i = 0; i < flashcards.length; i++) {
-        promises.push(
-          createFlashcardItemByFlashcardIdService(
-            flashcard,
-            flashcards[i].FRONT,
-            flashcards[i].BACK,
-          ),
+        await createFlashcardItemByFlashcardIdService(
+          flashcard,
+          flashcards[i].FRONT,
+          flashcards[i].BACK,
         );
       }
-      await Promise.all(promises).then((result) => {
-        res.status(200).json({
-          message: 'Success',
-          data: { flashcard: flashcard },
-        });
+      res.status(200).json({
+        message: 'Success',
+        data: { flashcard: flashcard },
       });
     }
   } catch (err: any) {
