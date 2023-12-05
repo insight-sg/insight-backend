@@ -18,7 +18,7 @@ export const getFrontBackFromOpenAIService = async (text_chunk: []) => {
   const result = await client.getChatCompletions(deployementId, message);
 
   console.log(
-    '[getFrontBackFromOpenAIService] result.choices From OpenAI : ',
+    '[getFrontBackFromOpenAIService] result.frontback From OpenAI : ',
     result.choices,
   );
   if (result.choices[0].message?.content) {
@@ -50,8 +50,6 @@ export const getQuestionsAndChoicesOpenAIService = async (text_chunk: []) => {
   const endpoint = process.env.AZURE_OPENAI_ENDPOINT ?? '';
   const key = process.env.AZURE_OPENAI_KEY ?? '';
 
-  console.log('endpoint : ', endpoint);
-  console.log('key : ', key);
   const client = new OpenAIClient(endpoint, new AzureKeyCredential(key));
   const deployementId = 'insight-chat-v1';
   const result = await client.getChatCompletions(deployementId, message);
@@ -64,17 +62,19 @@ export const getQuestionsAndChoicesOpenAIService = async (text_chunk: []) => {
     // const fixedJsonArray = result.choices[0].message?.content
     //   .replace(/'/g, '"')
     //   .replace(/(\w+):/g, '"$1":');
-    const jsonArray = result.choices[0].message.content
-      .split('\n')
-      .filter(Boolean) as any;
+    // const jsonArray = fixedJsonArray.split(/\n(?={)/).filter(Boolean);
 
+    const jsonArray = `[${result.choices[0].message?.content}]`;
     // Parse each JSON string into an object
-
-    const arrayOfObjects = jsonArray.map(JSON.parse);
-
-    console.log(arrayOfObjects);
-
-    return arrayOfObjects;
+    try {
+      // Parse the entire array
+      const arrayOfObjects = JSON.parse(jsonArray);
+      console.log(arrayOfObjects);
+      return arrayOfObjects;
+    } catch (error: any) {
+      console.error(`Error parsing JSON: ${error.message}`);
+      return [];
+    }
   }
   return null;
 };
