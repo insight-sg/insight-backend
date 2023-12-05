@@ -59,6 +59,7 @@ export const getUserController = async (
     }
   } catch (err: any) {
     log.error('Error in getUserController :', err);
+    console.log(err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };

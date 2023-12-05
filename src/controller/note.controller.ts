@@ -40,7 +40,7 @@ export const createNoteBySubjectIdController = async (
       '[createNoteBySubjectIdController] uploadResponse ',
       uploadResponse,
     );
-    const bloblUrl = process.env.AZURE_STORAGE_BLOB_URL;
+    const bloblUrl = process.env.AZURE_STORAGE_CONTAINER_URL;
     const newNoteUrl = `${bloblUrl}${uploadResponse}`;
     const textResponse =
       await getTextFromAzureDocumentIntelligenceService(newNoteUrl);
@@ -76,7 +76,7 @@ export const createNoteBySubjectIdController = async (
     }
   } catch (err: any) {
     log.error('Error in createNoteBySubjectIdController :', err);
-    console.error('err ', err);
+    console.log('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };

@@ -38,7 +38,7 @@ export const createSubjectController = async (req: Request, res: Response) => {
       user_id,
     );
 
-    console.log('subjects : ', subjects);
+    console.log('[createSubjectController] subjects : ', subjects);
     if (!subjects) {
       res
         .status(404)
@@ -50,7 +50,7 @@ export const createSubjectController = async (req: Request, res: Response) => {
     }
   } catch (err: any) {
     log.error('Error in createSubjectController :');
-    console.error('err ', err);
+    console.log('err ', err);
     res.status(500).send({ message: 'Internal Service Error', data: {} });
   }
 };
@@ -64,7 +64,7 @@ export const getAllSubjectByUserIdController = async (
     const { user_id } = req.params;
     const subjects = await getSubjectByUserIdService(Number(user_id));
 
-    console.log('subjects : ', subjects);
+    console.log('[getAllSubjectByUserIdController]subjects : ', subjects);
     if (!subjects) {
       res.status(404).send({ message: 'Error', data: {} });
     } else {
@@ -86,7 +86,7 @@ export const getAllNotesByUserIdController = async (
     const { user_id } = req.params;
     const subjects = await getSubjectByUserIdService(Number(user_id));
 
-    console.log('subjects : ', subjects);
+    console.log('[getAllNotesByUserIdController] subjects : ', subjects);
     if (!subjects) {
       res.status(404).send({ message: 'Error', data: {} });
     } else {

@@ -136,6 +136,10 @@ export const getAllQuizzesbyUserIdController = async (
           subjects[i].subject_id,
         );
         for (let j = 0; j < subjects[i].quizzes.length; j++) {
+          subjects[i].quizzes[j].attempts =
+            await getQuizAttemptsByQuizIdService(
+              subjects[i].quizzes[j].quiz_id,
+            );
           subjects[i].quizzes[j].questions = await getQuestionByQuizIdService(
             subjects[i].quizzes[j].quiz_id,
           );
