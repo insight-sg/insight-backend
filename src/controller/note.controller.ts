@@ -14,8 +14,9 @@ export const createNoteBySubjectIdController = async (
 ) => {
   log.info('[createNoteBySubjectIdController]');
   try {
-    const { subject_id, note_title } = req.body.data;
-    console.log('print out req : ', req.body);
+    const parsedBody = JSON.parse(req.body);
+    const { subject_id, note_title } = parsedBody.data;
+    console.log('print out req : ', parsedBody);
     console.log('[createNoteBySubjectIdController] subject id : ', subject_id);
     console.log(
       '[createNoteBySubjectIdController] note_title id : ',
