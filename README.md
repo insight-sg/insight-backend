@@ -12,8 +12,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/insight-sg/insight-mobile">
-    <img src="assets/images/icon.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/insight-sg/insight-backend">
+    <img src="https://github.com/insight-sg/insight-mobile/blob/master/assets/images/icon.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Insight Mobile</h3>
@@ -34,7 +34,7 @@ We envisioned a transformative platform where students seamlessly convert mundan
 
 <div align="center">
  
-<img src="./screensimages/Insight Architecture Diagram.png" alt="Architecture Diagram" width="700">
+<img src="https://github.com/insight-sg/insight-mobile/blob/master/screensimages/Insight Architecture Diagram.png" alt="Architecture Diagram" width="700">
 </div>
 
 ### Screens 
